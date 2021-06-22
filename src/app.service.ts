@@ -14,6 +14,14 @@ export class AppService {
     }
   }
 
+  async getCharactersById(id: string): Promise<swDocument | string> {
+    try {
+      return await this.swApi.getCharactersById(id);
+    } catch (e) {
+      return (e as Error).message;
+    }
+  }
+
   async createCharacter(
     character: string,
     episodes: string[],

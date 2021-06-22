@@ -7,12 +7,11 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { query } from 'express';
 import { UpdateWriteOpResult } from 'mongoose';
 import { swDocument } from './api.schema';
 import { AppService } from './app.service';
 
-@Controller('/api')
+@Controller('/api/characters/')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -21,7 +20,12 @@ export class AppController {
     return await this.appService.getCharacters();
   }
 
-  @Post()
+  @Get('/:id')
+  async getDataById(@Param() params): Promise<swDocument | string> {
+    return await this.appService.getCharactersById(params.id);
+  }
+
+  @Post('/add')
   async createData(
     @Query() query: Record<string, string | string[]>,
   ): Promise<swDocument | string> {
@@ -35,7 +39,7 @@ export class AppController {
     }
   }
 
-  @Put('/:id')
+  @Put('/update/:id')
   async updateData(
     @Param() params,
     @Query() query,
@@ -47,7 +51,7 @@ export class AppController {
     );
   }
 
-  @Delete('/:id')
+  @Delete('/delete/:id')
   async deleteData(@Param() params): Promise<swDocument[] | string> {
     return await this.appService.deleteCharacter(params.id as string);
   }

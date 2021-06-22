@@ -11,12 +11,16 @@ export class SWApi {
     return await this.swModel.find();
   }
 
+  async getCharactersById(id: string): Promise<swDocument> {
+    return await this.swModel.findById(id);
+  }
+
   async createCharacter(
     character: string,
     episodes: string[],
   ): Promise<swDocument> {
     const existingItem = await this.swModel.find({ character: character });
-    if (existingItem) {
+    if (existingItem.length) {
       throw Error('Item exists');
     }
     return await this.swModel.create({

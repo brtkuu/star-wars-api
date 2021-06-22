@@ -1,0 +1,165 @@
+openapi: 3.0.0
+info:
+  title: Star Wars API
+  description: Star wars characters and episodes where they cast
+  version: 0.1.0
+paths:
+  /:
+    get:
+      tags:
+        - Characters
+      summary: Returns a list of characters
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        '200': # status code
+          description: A JSON array of characters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    character:
+                      type: string
+                    episodes:
+                      type: array
+                      items:
+                        type: string
+  /{id}:
+    get:
+      tags:
+        - Characters
+      summary: Return one object selected by id
+      description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - name: id
+          in: path
+          description: Character ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description: A JSON object of characters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  character:
+                    type: string
+                  episodes:
+                    type: array
+                    items:
+                      type: string
+  /add:
+    post:
+      tags:
+        - Characters
+      summary: Add new object to API
+      description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - name: character
+          in: query
+          description: Character name
+          required: true
+          schema:
+            type: string
+        - name: episodes
+          in: query
+          description: Episodes
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200': # status code
+          description: A JSON object of character
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  character:
+                    type: string
+                  episodes:
+                    type: array
+                    items:
+                      type: string
+  /delete/{id}:
+    delete:
+      tags:
+        - Characters
+      summary: Delete object from API
+      description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - name: id
+          in: path
+          description: Character ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description: A JSON array of characters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    character:
+                      type: string
+                    episodes:
+                      type: array
+                      items:
+                        type: string
+  /update/{id}:
+    put:
+      tags:
+        - Characters
+      summary: Update object from API
+      description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - name: id
+          in: path
+          description: Character ID
+          required: true
+          schema:
+            type: string
+        - name: character
+          in: query
+          description: Character name
+          schema:
+            type: string
+        - name: episodes
+          in: query
+          description: Episodes
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200': # status code
+          description: Response with number of modified objects
+          content:
+            application/json:
+              type: object
+              properties:
+                n:
+                  type: integer
+                nModified:
+                  type: integer
+                ok:
+                  type: integer

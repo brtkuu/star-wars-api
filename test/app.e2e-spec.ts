@@ -1,24 +1,35 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { Test } from '@nestjs/testing';
 import { AppModule } from './../src/app.module';
+import { AppService } from './../src/app.service';
+import { INestApplication } from '@nestjs/common';
 
-describe('AppController (e2e)', () => {
+describe('StarWarsAPI', () => {
   let app: INestApplication;
+  let appService: AppService;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(AppService)
+      .useValue(appService)
+      .compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleRef.createNestApplication();
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it(`/GET allcharacters`, () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/cats')
       .expect(200)
-      .expect('Hello World!');
+      .expect({
+        data: appService.getCharacters(),
+      });
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

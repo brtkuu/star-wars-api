@@ -21,7 +21,9 @@ export class AppController {
   }
 
   @Get('/:id')
-  async getDataById(@Param() params): Promise<swDocument | string> {
+  async getDataById(
+    @Param() params: Record<'id', string>,
+  ): Promise<swDocument | string> {
     return await this.appService.getCharactersById(params.id);
   }
 
@@ -41,18 +43,27 @@ export class AppController {
 
   @Put('/update/:id')
   async updateData(
-    @Param() params,
-    @Query() query,
+    @Param() params: Record<'id', string>,
+    @Query() query: Record<'episodes' | 'character', string | string[]>,
   ): Promise<UpdateWriteOpResult | string> {
-    return await this.appService.updateCharacter(
-      params.id,
-      query.character as string,
-      query.episodes as string[],
-    );
+    if (query.character || query.episodes) {
+      return 'You did not provide any values';
+    }
+    try {
+      return await this.appService.updateCharacter(
+        params.id,
+        query.character as string,
+        query.episodes as string[],
+      );
+    } catch (e) {
+      return (e as Error).message;
+    }
   }
 
   @Delete('/delete/:id')
-  async deleteData(@Param() params): Promise<swDocument[] | string> {
+  async deleteData(
+    @Param() params: Record<'id', string>,
+  ): Promise<swDocument[] | string> {
     return await this.appService.deleteCharacter(params.id as string);
   }
 }
